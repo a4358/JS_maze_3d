@@ -7,9 +7,14 @@ export default class MazeAdapter extends Searchable{
     constructor(maze){
         super();
         this.maze = maze;
+        this.playerpos = false; //used to look from current position when playing the game, not the very start
+    }
+    set_start_node(x,y,z){
+        this.playerpos = [x,y,z];
     }
     get_start_node(){
-        return this.maze.get_cell_id(...this.maze.entrance);
+        if (this.playerpos === false) return this.maze.get_cell_id(...this.maze.entrance);
+        else return this.maze.get_cell_id(...this.playerpos);
     }
     get_finish_node(){
         return this.maze.get_cell_id(...this.maze.exit);

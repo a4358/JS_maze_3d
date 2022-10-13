@@ -101,7 +101,7 @@ export default class Maze3d {
         [x, y, z] = neighbour;
         this.set_wall(x, y, z, this.oppositedir(direction), false);
     }
-    to_string(solution = []) {
+    to_string(solution = [],level = false) {
         let repr = "";
         const wall = "█";
         const uparrow = "↑";
@@ -110,8 +110,7 @@ export default class Maze3d {
         const entrancesign = "S";
         const exitsign = "G";
         const pathsymbol = "*"
-        for (let z = 0; z < this.height; z++) {
-            repr += `   Level ${z} \n`;
+        let reprlevel = (z) => {
             for (let y = 0; y < this.width; y++) {
                 for (let x = 0; x < this.length; x++) {
                     repr += wall;
@@ -155,12 +154,22 @@ export default class Maze3d {
                 repr += wall + wall;
             repr += wall + "\n";
         }
+        if (level === false){
+            for (let z = 0; z < this.height; z++) {
+                repr += `   Level ${z} \n`;
+                reprlevel(z);
+            }
+        }
+        else {
+            let z = level;
+            reprlevel(z);
+        }
         return repr;
     }
 }
 /*
 //testing ↓ ↑ ↕ █
-const maze1 = new Maze3d(5, 5, 5);
+//const maze1 = new Maze3d(5, 5, 5);
 //maze1.set_cell(1, 2, 3, [true, true, true, false, true, true]);
 //maze1.set_cell(1, 2, 4, [true, true, true, false, true, true]);
 //console.log(maze1.get_cell(1, 2, 3));
@@ -180,5 +189,5 @@ const maze1 = new Maze3d(5, 5, 5);
 console.log(maze1.get_cell_id(0, 0, 2));
 console.log(maze1.floorsize);
 console.log(maze1.get_cell_coords(maze1.get_cell_id(4, 4, 3)));
-
+console.log(maze1.to_string());
 */

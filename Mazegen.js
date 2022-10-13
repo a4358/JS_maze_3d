@@ -25,7 +25,7 @@ class Maze3dGenerator {
     }
 }
 
-class SimpleMaze3dGenerator extends Maze3dGenerator {
+export class SimpleMaze3dGenerator extends Maze3dGenerator {
     /**
     * Generates a maze by removing a bunch of walls at andom and carving a guaranteed path to a randomly placed exit
     */
@@ -60,7 +60,7 @@ class SimpleMaze3dGenerator extends Maze3dGenerator {
     }
 }
 
-class DFSMaze3dGenerator extends Maze3dGenerator {
+export class DFSMaze3dGenerator extends Maze3dGenerator {
     /**
     * Generates a maze using the the random DFS algorihm
     */
@@ -113,7 +113,7 @@ class DFSMaze3dGenerator extends Maze3dGenerator {
     }
 }
 
-class AldousBroderMaze3dGenerator extends Maze3dGenerator {
+export class AldousBroderMaze3dGenerator extends Maze3dGenerator {
     /**
     * Generates a maze using the Aldous-Broder algorihm, unpredictably slow and inefficient but the maze is unbiased
     */
@@ -154,15 +154,15 @@ class AldousBroderMaze3dGenerator extends Maze3dGenerator {
         return maze;
     }
 }
-
+/*
 const g1 = new SimpleMaze3dGenerator();
 const g2 = new DFSMaze3dGenerator();
 const g3 = new AldousBroderMaze3dGenerator();
 const resultmaze = g1.measureAlgorithmTime(300, 300, 1);
 //console.log(resultmaze.maze.to_string());
-//console.log(resultmaze.retstring);
+console.log(resultmaze.retstring);
 //console.log(resultmaze.maze.entrance);
-//.log(resultmaze.maze.exit);
+//console.log(resultmaze.maze.exit);
 let a1 = new MazeAdapter(resultmaze.maze);
 let dfs = new UniversalDFS();
 let bfs = new UniversalBFS();
@@ -178,3 +178,4 @@ console.log(dfs.statecounter, "states,", path1.length);
 //console.log(resultmaze.maze.to_string(path2));
 console.log(bfs.statecounter, "states,", path2.length);
 console.log(astar.statecounter, "states,", path3.length);
+*/

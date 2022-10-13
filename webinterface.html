@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maze game</title>
+    <style>
+        aside {
+          width: 20%;
+          padding-left: 15px;
+          margin-left: 15px;
+          float: left;
+          background-color: lightgray;
+        }
+        #canvasholder {
+            position: relative;
+            left: 25%;
+            width: fit-content;
+        }
+        #mazeimage {
+            border: 1px solid black;
+            position: absolute;
+            top: 0;
+            left: 0;
+
+        }
+        #playercanvas {
+            border: 1px solid black;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        input:invalid {
+            border: 2px dashed red;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvasholder">
+        <canvas id="mazeimage" hidden></canvas>
+        <canvas id="playercanvas" hidden></canvas>
+    </div>
+    <aside>
+        <form id="mazeparams">
+            <label for="name">Name (for saving/loading, optional):</label><br><input type="text" id="name" value="myMaze"><br>
+            <label for="rows">Rows</label><br><input type="number" id="rows" value="15" min="1" max="50"><br>
+            <label for="columns">Columns</label><br><input type="number" id="columns" value="15" min="1" max="50"><br>
+            <label for="layers">Layers</label><br><input type="number" id="layers" value="1" min="1" max="50"><br>
+            <label for="genalgs">Choose maze creation algorithm:</label>
+            <select id="genalgs">
+            <option value="randomgen">Simple random</option>
+            <option value="dfsgen" selected="true">DFS</option>
+            <option value="abgen">Aldous-Broder</option>
+            </select>
+            <button type="button" id="newgamebtn">Start new game</button><button type="button" id="savebtn">Save</button><button type="button" id="loadbtn">Load</button><br>
+            <label for="searchalgs">Choose search algorithm:</label>
+            <select id="searchalgs">
+            <option value="dfs">DFS</option>
+            <option value="bfs">BFS</option>
+            <option value="astar">A*</option>
+            </select>
+            <br>
+            <button type="button" id="hintbtn">Get a hint</button>
+            <button type="button" id="solvebtn">Show full solution</button>
+            <p id="hinttext"></p>         
+
+
+
+        </form>
+    </aside>
+    <div hidden>
+        <img id="exitimg" src="images/exitimg.png" >
+        <img id="playerimg" src="images/playerimg.png" >
+        <img id="ladderimg" src="images/ladderimg.png" >
+
+    </div>
+    <script src="main.js" type="module">
+    </script>
+</body>
+</html>
