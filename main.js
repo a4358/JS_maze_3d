@@ -120,11 +120,11 @@ function savegame(){
 
 function loadgame(){
     let gameinfo = JSON.parse(localStorage.getItem(name.value));
-    maze = new Maze3d(gameinfo.maze.width, gameinfo.maze.length, gameinfo.maze.height);
+    maze = new Maze3d(gameinfo.maze.length, gameinfo.maze.width, gameinfo.maze.height);
     maze.cells = gameinfo.maze.cells;
     maze.entrance = gameinfo.maze.entrance;
     maze.exit = gameinfo.maze.exit;
-    console.log(gameinfo.otherdata);
+    //console.log(gameinfo.otherdata);
     [currentx, currenty, currentz, genalg] = [...gameinfo.otherdata];
     [rows.value, columns.value, layers.value, generationalg.value] = [maze.width, maze.length, maze.height, genalg];
     solution_recent = false;
