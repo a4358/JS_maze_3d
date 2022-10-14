@@ -9,6 +9,9 @@ import MazeAdapter from './adapter.js';
 const exitimage = document.getElementById("exitimg");
 const playerimage = document.getElementById("playerimg");
 const ladderimage = document.getElementById("ladderimg");
+const upladderimage = document.getElementById("upladderimg");
+const downladderimage = document.getElementById("downladderimg");
+
 const newgamebtn = document.getElementById('newgamebtn');
 const savebtn = document.getElementById('savebtn');
 const loadbtn = document.getElementById('loadbtn');
@@ -33,7 +36,7 @@ let srcalg = false;
 let currentx;
 let currenty;
 let currentz;
-let cellsize = 20;
+let cellsize = 50;
 
 
 
@@ -51,7 +54,7 @@ loadbtn.addEventListener('click', loadgame);
 solvebtn.addEventListener('click', showfullsolution);
 hintbtn.addEventListener('click', showhint);
 document.addEventListener('keydown', e => {
-    
+    if (document.activeElement != name){
     switch (e.code) {
         case 'ArrowUp':
             e.preventDefault();
@@ -83,7 +86,27 @@ document.addEventListener('keydown', e => {
             move(ABOVE);
             break;
 
+        case 'KeyW':
+            e.preventDefault();
+            move(NORTH);
+            break;
 
+        case 'KeyS':
+            e.preventDefault();
+            move(SOUTH);
+            break;
+
+        case 'KeyA':
+            e.preventDefault();
+            move(WEST);
+            break;
+
+        case 'KeyD':
+            e.preventDefault();
+            move(EAST);
+            break;
+
+        }
     }
 });
 
@@ -97,7 +120,7 @@ function savegame(){
 
 function loadgame(){
     let gameinfo = JSON.parse(localStorage.getItem(name.value));
-    maze = new Maze3d(maze.width, maze.length, maze.height);
+    maze = new Maze3d(gameinfo.maze.width, gameinfo.maze.length, gameinfo.maze.height);
     maze.cells = gameinfo.maze.cells;
     maze.entrance = gameinfo.maze.entrance;
     maze.exit = gameinfo.maze.exit;
@@ -109,7 +132,69 @@ function loadgame(){
     drawmaze();
 
 }
+// //north west above south east below
+// const testcellnorth = [true,false,false,false,false,false];
+// const testcellsouth = [false,false,false,true,false,false];
+// const testcelleast = [false,false,false,false,true,false];
+// const testcellwest = [false,true,false,false,false,false];
+// const testcellabove = [false,false,true,false,false,false];
+// const testcellallwalls= [true,true,false,false,false,false];
 
+
+function drawmaze() {
+    canvas.hidden = false;
+    canvas2.hidden = false;
+    canvas.width = (maze.length) * cellsize;
+    canvas.height = (maze.width) * cellsize;
+    canvas2.width = (maze.length) * cellsize;
+    canvas2.height = (maze.width) * cellsize;
+    mazectx.clearRect(0, 0, canvas.width, canvas.height);
+    function drawcell(x,y,cell){
+        //console.log(cell);
+        mazectx.strokeStyle = "black";
+        mazectx.beginPath();
+        mazectx.moveTo(x*cellsize,y*cellsize);
+        if (cell[NORTH]) mazectx.lineTo((x+1)*cellsize,y*cellsize);
+        mazectx.moveTo((x+1)*cellsize,y*cellsize);
+        if (cell[EAST]) mazectx.lineTo((x+1)*cellsize,(y+1)*cellsize);
+        mazectx.moveTo((x+1)*cellsize,(y+1)*cellsize);
+        if (cell[SOUTH]) mazectx.lineTo(x*cellsize,(y+1)*cellsize);
+        mazectx.moveTo(x*cellsize,(y+1)*cellsize);
+        if (cell[WEST]) mazectx.lineTo(x*cellsize,y*cellsize);
+        mazectx.stroke();
+        if (maze.exit[0] === x && maze.exit[1] === y && maze.exit[2] === currentz) 
+        mazectx.drawImage(exitimage, x * cellsize, y * cellsize, cellsize, cellsize);
+        if (!cell[ABOVE]) {
+            mazectx.drawImage(upladderimage, x * cellsize, y * cellsize, cellsize, cellsize);
+        }
+        if (!cell[BELOW]) {
+            mazectx.drawImage(downladderimage, x * cellsize, y * cellsize, cellsize, cellsize);
+        }
+        
+
+    }
+    for (let y = 0; y < maze.width; y++) {
+        for (let x = 0; x < maze.length; x++) {
+            drawcell(x,y,maze.get_cell(x,y,currentz));
+        }
+    }
+    // drawcell(1,1,testcellnorth);
+    // drawcell(3,1,testcellsouth);
+    // drawcell(5,1,testcelleast);
+    // drawcell(7,1,testcellwest);
+    // drawcell(1,3,testcellabove);
+    // drawcell(1,5,testcellallwalls);
+    //drawcell(1,0,maze.get_cell(1,0,currentz));
+
+    drawplayer();
+
+}
+function drawplayer(){
+    playerctx.drawImage(playerimage, currentx * cellsize, currenty * cellsize, cellsize, cellsize);
+}
+function clearplayer(){
+    playerctx.clearRect(currentx * cellsize, currenty * cellsize, cellsize, cellsize);
+}
 
 
 function newgame() {
@@ -133,49 +218,14 @@ function newgame() {
     maze = gen.generate(x, y, z);
     adapted_maze = new MazeAdapter(maze);
 
-    //console.log(maze.to_string([], 0));
+    console.log(maze.to_string([], 0));
     currentx = maze.entrance[0];
     currenty = maze.entrance[1];
     currentz = maze.entrance[2];
     drawmaze();
 }
 
-function drawmaze() {
-    canvas.hidden = false;
-    canvas2.hidden = false;
-    const linelength = 2 * maze.length + 1;
-    const lineheight = 2 * maze.width + 1;
-    const stringrepr = maze.to_string([], currentz);
-    canvas.width = (linelength) * cellsize;
-    canvas.height = (lineheight) * cellsize;
-    canvas2.width = (linelength) * cellsize;
-    canvas2.height = (lineheight) * cellsize;
-    mazectx.clearRect(0, 0, canvas.width, canvas.height);
-    let i = 0;
-    for (let y = 0; y < lineheight; y++) {
-        for (let x = 0; x < linelength; x++) {
-            if (stringrepr[i] === '█') {
-                mazectx.fillRect(x * cellsize, y * cellsize, cellsize, cellsize);
-            }
-            if (stringrepr[i] === 'G') {
-                mazectx.drawImage(exitimage, x * cellsize, y * cellsize, cellsize, cellsize);
-            }
-            if (stringrepr[i] === '↓' || stringrepr[i] === '↑' || stringrepr[i] === '↕') {
-                mazectx.drawImage(ladderimage, x * cellsize, y * cellsize, cellsize, cellsize);
-            }
-            i++;
-        }
-        i++;
-    }
-    drawplayer();
 
-}
-function clearplayer() {
-    playerctx.clearRect((2 * currentx + 1) * cellsize, (2 * currenty + 1) * cellsize, cellsize, cellsize);
-}
-function drawplayer() {
-    playerctx.drawImage(playerimage, (2 * currentx + 1) * cellsize, (2 * currenty + 1) * cellsize, cellsize, cellsize);
-}
 function move(direction) {
     if (maze.get_cell(currentx, currenty, currentz)[direction] === false) {
         solution_recent = false;
@@ -221,7 +271,8 @@ function showfullsolution() {
     while (solution.length > i){
         let cell = maze.get_cell_coords(solution[i]);
         if (cell[2] === currentz){
-        playerctx.lineTo((2 * cell[0] + 1) * cellsize + cellsize / 2, (2 * cell[1] + 1) * cellsize + cellsize / 2);
+        //playerctx.lineTo((2 * cell[0] + 1) * cellsize + cellsize / 2, (2 * cell[1] + 1) * cellsize + cellsize / 2);
+        playerctx.lineTo(cell[0] * cellsize + cellsize / 2, cell[1]* cellsize + cellsize / 2);
         }
         i++;
         
@@ -240,11 +291,51 @@ function showhint() {
         let cell = maze.get_cell_coords(solution[i]);
         if (cell[2] === currentz){
             usedpoints += 1;
-            playerctx.lineTo((2 * cell[0] + 1) * cellsize + cellsize / 2, (2 * cell[1] + 1) * cellsize + cellsize / 2);
+            //playerctx.lineTo((2 * cell[0] + 1) * cellsize + cellsize / 2, (2 * cell[1] + 1) * cellsize + cellsize / 2);
+            playerctx.lineTo(cell[0] * cellsize + cellsize / 2, cell[1]* cellsize + cellsize / 2);
         }
         i++;
         
     }
     playerctx.stroke();
 
+}
+
+//old drawing methods
+
+function altdrawmaze() {
+    canvas.hidden = false;
+    canvas2.hidden = false;
+    const linelength = 2 * maze.length + 1;
+    const lineheight = 2 * maze.width + 1;
+    const stringrepr = maze.to_string([], currentz);
+    canvas.width = (linelength) * cellsize;
+    canvas.height = (lineheight) * cellsize;
+    canvas2.width = (linelength) * cellsize;
+    canvas2.height = (lineheight) * cellsize;
+    mazectx.clearRect(0, 0, canvas.width, canvas.height);
+    let i = 0;
+    for (let y = 0; y < lineheight; y++) {
+        for (let x = 0; x < linelength; x++) {
+            if (stringrepr[i] === '█') {
+                mazectx.fillRect(x * cellsize, y * cellsize, cellsize, cellsize);
+            }
+            if (stringrepr[i] === 'G') {
+                mazectx.drawImage(exitimage, x * cellsize, y * cellsize, cellsize, cellsize);
+            }
+            if (stringrepr[i] === '↓' || stringrepr[i] === '↑' || stringrepr[i] === '↕') {
+                mazectx.drawImage(ladderimage, x * cellsize, y * cellsize, cellsize, cellsize);
+            }
+            i++;
+        }
+        i++;
+    }
+    altdrawplayer();
+
+}
+function altclearplayer() {
+    playerctx.clearRect((2 * currentx + 1) * cellsize, (2 * currenty + 1) * cellsize, cellsize, cellsize);
+}
+function altdrawplayer() {
+    playerctx.drawImage(playerimage, (2 * currentx + 1) * cellsize, (2 * currenty + 1) * cellsize, cellsize, cellsize);
 }
