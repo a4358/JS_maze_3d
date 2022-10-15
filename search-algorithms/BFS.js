@@ -1,22 +1,21 @@
-import Searchable from "../Searchable.js";
-
-export class UniversalBFS{
-    constructor(){
+/** BFS search of a universal search problem represented by Searchable */
+export class UniversalBFS {
+    constructor() {
         this.statecounter = 0;
     }
-    
-    search(searchable){
-        function givereturnpath(node,tree){
+
+    search(searchable) {
+        function givereturnpath(node, tree) {
             let currnode = node;
             const path = [];
             path.push(currnode);
-            while (tree[currnode] != -1){
+            while (tree[currnode] != -1) {
                 currnode = tree[currnode];
                 path.push(currnode);
             }
             path.reverse();
             return path;
-            
+
         }
         let tree = [];
         let frontier = []; //queue
@@ -27,15 +26,15 @@ export class UniversalBFS{
         let queueindex = 0;
         tree[currentnode] = -1; //root of the tree
         frontier.push(currentnode);
-        while (frontier.length > 0){
+        while (frontier.length > 0) {
             currentnode = frontier[queueindex];
             queueindex += 1;
             this.statecounter += 1;
-            if (currentnode === goal) return givereturnpath(currentnode,tree);
+            if (currentnode === goal) return givereturnpath(currentnode, tree);
             neighbours = searchable.get_node_neighbours(currentnode);
-            while (neighbours.length > 0){
+            while (neighbours.length > 0) {
                 neigbour = neighbours.pop();
-                if (tree[neigbour] === undefined){
+                if (tree[neigbour] === undefined) {
                     tree[neigbour] = currentnode;
                     frontier.push(neigbour);
                 }
