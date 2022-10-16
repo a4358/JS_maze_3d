@@ -255,10 +255,11 @@ function newgame() {
     }
     maze = gen.generate(x, y, z);
     if (bonuscarving.value != "0"){
-        let holenum = 8;
+        let holenum = Math.floor(maze.floorsize/10);
         if (bonuscarving.value = "2") holenum *= 2;
         for (let k=0; k < Math.random()*holenum; k++){
-            maze.remove_wall(Math.floor(Math.random() * x), Math.floor(Math.random() * y), Math.floor(Math.random() * z), Math.floor(Math.random() * 6), false)
+            if (maze.remove_wall(Math.floor(Math.random() * x), Math.floor(Math.random() * y), Math.floor(Math.random() * z), Math.floor(Math.random() * 6), false) === false)
+            k -=1;
         }
     }
     adapted_maze = new MazeAdapter(maze);
