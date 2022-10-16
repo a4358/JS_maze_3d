@@ -156,10 +156,10 @@ function loadgame() {
 }
 
 /** chooses an optimal cell size depending on maze size and display size */
-function choosecellsize(){
-    let candidatesizex = 0.72*window.innerWidth / maze.length; //multiplier is to leave space for the sidebar
-    let candidatesizey = 0.95*window.innerHeight / maze.width;
-    cellsize = Math.max(mincellsize,Math.min((Math.floor(candidatesizex)),(Math.floor(candidatesizey)))); 
+function choosecellsize() {
+    let candidatesizex = 0.72 * window.innerWidth / maze.length; //multiplier is to leave space for the sidebar
+    let candidatesizey = 0.95 * window.innerHeight / maze.width;
+    cellsize = Math.max(mincellsize, Math.min((Math.floor(candidatesizex)), (Math.floor(candidatesizey))));
     //cells will be as big as possible while still quare and fitting on the screen, otherwise they will not go below minimum size and the page will need to be scrolled
 }
 
@@ -188,24 +188,24 @@ function drawmaze() {
         mazectx.moveTo(x * cellsize, (y + 1) * cellsize);
         if (cell[WEST]) mazectx.lineTo(x * cellsize, y * cellsize);
         mazectx.stroke();
-        if (maze.exit[0] === x && maze.exit[1] === y && maze.exit[2] === currentz){
-            if ((cellsize <= mincellsize*2 && lowresmode.value === "1") || (lowresmode.value === "2")){
+        if (maze.exit[0] === x && maze.exit[1] === y && maze.exit[2] === currentz) {
+            if ((cellsize <= mincellsize * 2 && lowresmode.value === "1") || (lowresmode.value === "2")) {
                 mazectx.fillStyle = "#0000FF";
                 mazectx.fillRect(x * cellsize + 1, y * cellsize + 1, cellsize - 2, cellsize - 2);
             }
             else mazectx.drawImage(exitimage, x * cellsize, y * cellsize, cellsize, cellsize);
         }
         if (!cell[ABOVE]) {
-            if ((cellsize <= mincellsize*2 && lowresmode.value === "1") || (lowresmode.value === "2")){
+            if ((cellsize <= mincellsize * 2 && lowresmode.value === "1") || (lowresmode.value === "2")) {
                 mazectx.fillStyle = "#00FF00";
-                mazectx.fillRect(x * cellsize + cellsize/2, y * cellsize, cellsize/2-2, cellsize);
+                mazectx.fillRect(x * cellsize + cellsize / 2, y * cellsize, cellsize / 2 - 2, cellsize);
             }
             else mazectx.drawImage(upladderimage, x * cellsize, y * cellsize, cellsize, cellsize);
         }
         if (!cell[BELOW]) {
-            if ((cellsize <= mincellsize*2 && lowresmode.value === "1") || (lowresmode.value === "2")){
+            if ((cellsize <= mincellsize * 2 && lowresmode.value === "1") || (lowresmode.value === "2")) {
                 mazectx.fillStyle = "grey";
-                mazectx.fillRect(x * cellsize+2, y * cellsize, cellsize/2-2, cellsize);
+                mazectx.fillRect(x * cellsize + 2, y * cellsize, cellsize / 2 - 2, cellsize);
             }
             else mazectx.drawImage(downladderimage, x * cellsize, y * cellsize, cellsize, cellsize);
         }
@@ -224,9 +224,9 @@ function drawmaze() {
 
 /** draws the player sprite at the current coordinates*/
 function drawplayer() {
-    if ((cellsize <= mincellsize*2 && lowresmode.value === "1") || (lowresmode.value === "2")){ //visual assist for super zoomed out mazes, draws a red block instead of the player
+    if ((cellsize <= mincellsize * 2 && lowresmode.value === "1") || (lowresmode.value === "2")) { //visual assist for super zoomed out mazes, draws a red block instead of the player
         playerctx.fillStyle = "#FF0000";
-        playerctx.fillRect(currentx * cellsize + 1, currenty * cellsize + 1, cellsize - 2 , cellsize - 2);
+        playerctx.fillRect(currentx * cellsize + 1, currenty * cellsize + 1, cellsize - 2, cellsize - 2);
     }
     else playerctx.drawImage(playerimage, currentx * cellsize, currenty * cellsize, cellsize, cellsize); //place image as normal otherwise
 }
@@ -256,16 +256,16 @@ function newgame() {
             break;
     }
     maze = gen.generate(x, y, z);
-    if (bonuscarving.value != "0"){
-        let holenum = Math.floor(maze.floorsize/10);
+    if (bonuscarving.value != "0") {
+        let holenum = Math.floor(maze.floorsize / 10);
         if (bonuscarving.value = "2") holenum *= 2;
-        for (let k=0; k < Math.random()*holenum; k++){
+        for (let k = 0; k < Math.random() * holenum; k++) {
             if (maze.remove_wall(Math.floor(Math.random() * x), Math.floor(Math.random() * y), Math.floor(Math.random() * z), Math.floor(Math.random() * 6), false) === false)
-            k -=1;
+                k -= 1;
         }
     }
     adapted_maze = new MazeAdapter(maze);
-    console.log(maze.to_string([], maze.entrance[2]));
+    //console.log(maze.to_string([], maze.entrance[2]));
     currentx = maze.entrance[0];
     currenty = maze.entrance[1];
     currentz = maze.entrance[2];
@@ -282,7 +282,7 @@ function move(direction, id = -1) {
         clearplayer();
         const oldz = currentz;
         if (id === -1) [currentx, currenty, currentz] = maze.get_neighbour(currentx, currenty, currentz, direction); //actual coordinate reassignment
-        else [currentx, currenty, currentz] = maze.get_cell_coords(id);
+        else[currentx, currenty, currentz] = maze.get_cell_coords(id);
         if (solution_recent) { //check if player is following the solution, trim it to not have to recalculate
             let expectedcell = solution[solution.length - 2];
             let currentcell = maze.get_cell_id(currentx, currenty, currentz);
@@ -310,7 +310,7 @@ function move(direction, id = -1) {
 
 /**resets player position to start*/
 function resetposition() {
-    move(null,maze.get_cell_id(...maze.entrance));
+    move(null, maze.get_cell_id(...maze.entrance));
 }
 /** shows a victory screen */
 function victory() {
@@ -351,53 +351,53 @@ function showfullsolution() {
 }
 
 /** actually draws the solution line */
-function drawsolution(){
+function drawsolution() {
     playerctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawplayer();
-        let i = 0;
-        playerctx.beginPath();
-        playerctx.strokeStyle = 'blue';
-        let dotted = false
-        while (i < solution.length) {
-            let cell = maze.get_cell_coords(solution[i]);
-            
-            if (cell[2] === currentz) {
-                if (dotted) playerctx.setLineDash([10,10]);
-                else playerctx.setLineDash([]);
-                playerctx.lineTo(cell[0] * cellsize + cellsize / 2, cell[1] * cellsize + cellsize / 2);
-                playerctx.stroke();
-                playerctx.beginPath();
-                playerctx.lineTo(cell[0] * cellsize + cellsize / 2, cell[1] * cellsize + cellsize / 2);
-                dotted = false;
+    drawplayer();
+    let i = 0;
+    playerctx.beginPath();
+    playerctx.strokeStyle = 'blue';
+    let dotted = false
+    while (i < solution.length) {
+        let cell = maze.get_cell_coords(solution[i]);
 
-            }
-            if (cell[2] != currentz) dotted = true;
-            // canvasx = cell[0] * cellsize + cellsize / 2;
-            //     canvasy = cell[1] * cellsize + cellsize / 2;
-            // if (cell[2] === currentz) {
+        if (cell[2] === currentz) {
+            if (dotted) playerctx.setLineDash([10, 10]);
+            else playerctx.setLineDash([]);
+            playerctx.lineTo(cell[0] * cellsize + cellsize / 2, cell[1] * cellsize + cellsize / 2);
+            playerctx.stroke();
+            playerctx.beginPath();
+            playerctx.lineTo(cell[0] * cellsize + cellsize / 2, cell[1] * cellsize + cellsize / 2);
+            dotted = false;
 
-            //     playerctx.lineTo(canvasx, canvasy);
-            //     playerctx.stroke();
-            //     playerctx.beginPath();
-            //     playerctx.strokeStyle = 'blue';
-            //     playerctx.setLineDash([]);
-            //     playerctx.moveTo(canvasx, canvasy);
-                
-            //     playerctx.lineTo(canvasx, canvasy);
-            //     playerctx.stroke();
-            //     playerctx.beginPath();
-            //     playerctx.moveTo(canvasx, canvasy);
-            //     playerctx.setLineDash([10,10]);
-            //     playerctx.strokeStyle = 'red';
-            // }
-            
-            i++;
         }
-        playerctx.stroke();
+        if (cell[2] != currentz) dotted = true;
+        // canvasx = cell[0] * cellsize + cellsize / 2;
+        //     canvasy = cell[1] * cellsize + cellsize / 2;
+        // if (cell[2] === currentz) {
+
+        //     playerctx.lineTo(canvasx, canvasy);
+        //     playerctx.stroke();
+        //     playerctx.beginPath();
+        //     playerctx.strokeStyle = 'blue';
+        //     playerctx.setLineDash([]);
+        //     playerctx.moveTo(canvasx, canvasy);
+
+        //     playerctx.lineTo(canvasx, canvasy);
+        //     playerctx.stroke();
+        //     playerctx.beginPath();
+        //     playerctx.moveTo(canvasx, canvasy);
+        //     playerctx.setLineDash([10,10]);
+        //     playerctx.strokeStyle = 'red';
+        // }
+
+        i++;
+    }
+    playerctx.stroke();
 }
 
 /** clears the solution graphic and resets interface and flag for it */
-function hidesolution(){
+function hidesolution() {
     playerctx.clearRect(0, 0, canvas.width, canvas.height);
     drawplayer();
     solvebtn.innerText = "Show full solution";
@@ -437,14 +437,14 @@ function automove() {
             e.preventDefault();
             stopmoving();
         }, {
-            once : true
-          });
+            once: true
+        });
 
         function movestep() {
-            if (solution.length <= 2){
+            if (solution.length <= 2) {
                 stopmoving();
             }
-            move(null,solution[solution.length-2]);
+            move(null, solution[solution.length - 2]);
         }
     }
     else stopmoving();
