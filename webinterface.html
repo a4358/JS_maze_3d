@@ -63,16 +63,31 @@
             <br>
             <button type="button" id="hintbtn">Get a hint</button>
             <button type="button" id="solvebtn">Show full solution</button>
-            <p id="hinttext"></p>         
-
-
+            <button type="button" id="automovebtn">Take me to the exit</button>         
+            <br>
+            <p>Bonus features</p>
+            <label for="lowresmode">high-visiblity sprites (good for very small tiles of large mazes)</label>
+            <select id="lowresmode">
+                <option value='0'>disable</option>
+                <option value="1" selected="true">auto</option>
+                <option value="2">force</option>
+            </select>
+            <br>
+            <br>
+            <label for="bonuscarving">bonus post-generation random carving (helps spice up dfs and Aldous-Broder mazes by adding loops)</label>
+            <select id="bonuscarving">
+                <option value='0' selected="true">disable</option>
+                <option value="1">a little</option>
+                <option value="2">a lot</option>
+            </select>
+            <br>
+            <label for="speed">movement speed (ms/cell)</label><br><input type="number" id="speed" value="200" min="20" max="1000">
 
         </form>
     </aside>
     <div hidden>
         <img id="exitimg" src="images/exitimg.png" >
         <img id="playerimg" src="images/playerimg.png" >
-        <img id="ladderimg" src="images/ladderimg.png" >
         <img id="upladderimg" src="images/upladderimg.png" >
         <img id="downladderimg" src="images/downladderimg.png" >
 
