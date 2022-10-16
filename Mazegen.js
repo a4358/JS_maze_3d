@@ -9,13 +9,13 @@ class Maze3dGenerator {
         }
     }
 
-    generate(x, y, z, seed) {
+    generate(x, y, z) {
         throw new Error("The method must be implemented in a subclass");
     }
 
-    measureAlgorithmTime(x, y, z, seed) {
+    measureAlgorithmTime(x, y, z) {
         const starttime = Date.now();
-        const maze = this.generate(x, y, z, seed);
+        const maze = this.generate(x, y, z);
         const endtime = Date.now();
         const delta = endtime - starttime;
         const retstring = `generation took ${delta}ms`;
