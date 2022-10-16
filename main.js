@@ -15,6 +15,7 @@ const downladderimage = document.getElementById("downladderimg");
 const newgamebtn = document.getElementById('newgamebtn');
 const savebtn = document.getElementById('savebtn');
 const loadbtn = document.getElementById('loadbtn');
+const resetbtn = document.getElementById('resetbtn');
 const name = document.getElementById('name');
 const solvebtn = document.getElementById('solvebtn');
 const hintbtn = document.getElementById('hintbtn');
@@ -56,6 +57,7 @@ const playerctx = canvas2.getContext('2d');
 newgamebtn.addEventListener('click', newgame);
 savebtn.addEventListener('click', savegame);
 loadbtn.addEventListener('click', loadgame);
+resetbtn.addEventListener('click', resetposition);
 solvebtn.addEventListener('click', showfullsolution);
 hintbtn.addEventListener('click', showhint);
 autobtn.addEventListener('click', automove);
@@ -306,6 +308,10 @@ function move(direction, id = -1) {
     }
 }
 
+/**resets player position to start*/
+function resetposition() {
+    move(null,maze.get_cell_id(...maze.entrance));
+}
 /** shows a victory screen */
 function victory() {
     alert("congratulations! you got to the exit. feel free to wander or restart.")
